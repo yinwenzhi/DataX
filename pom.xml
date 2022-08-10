@@ -22,7 +22,7 @@
         <commons-lang3-version>3.3.2</commons-lang3-version>
         <commons-configuration-version>1.10</commons-configuration-version>
         <commons-cli-version>1.2</commons-cli-version>
-        <fastjson-version>1.2.49</fastjson-version>
+        <fastjson-version>1.2.83</fastjson-version>
         <guava-version>16.0.1</guava-version>
         <diamond.version>3.7.2.1-SNAPSHOT</diamond.version>
 
@@ -248,7 +248,38 @@
     </pluginRepositories>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.10</version>
+            </extension>
+        </extensions>
+
         <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <serverId>dataxremote229</serverId>
+                    <fromFile>target/datax.tar.gz</fromFile>
+                    <toFile>datax_feature2_phoenix.tar.gz</toFile>
+                    <url>scp://10.96.241.229/data/yfs/dataxData/build</url>
+                    <commands>
+                        <!--                        <command>rm -rf /data/yfs/dataxData/install/datax</command>-->
+                        <!--                        <command>rm -rf /data/yfs/dataxData/build/datax_feature2_phoenix.tar.gz</command>-->
+                        <command>cd  /data/yfs/dataxData/build</command>
+                        <command>tar zxvf /data/yfs/dataxData/build/datax_feature2_phoenix.tar.gz</command>
+                        <command>mv /data/yfs/dataxData/build/datax /data/yfs/dataxData/install/</command>
+                    </commands>
+                    <displayCommandOutputs>true</displayCommandOutputs>
+                </configuration>
+            </plugin>
+            <!--    mvn -U clean package assembly:assembly -Dmaven.test.skip=true wagon:upload-single -->
+
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
